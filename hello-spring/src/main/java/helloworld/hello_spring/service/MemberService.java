@@ -2,7 +2,6 @@ package helloworld.hello_spring.service;
 
 import helloworld.hello_spring.domain.Member;
 import helloworld.hello_spring.repository.MemberRepository;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +19,13 @@ public class MemberService {
      * 회원 가입
      * 조건1: 같은 이름의 중복 회원은 안된다
      */
-    public Long join(@NotNull Member member) {
+    public Long join(Member member) {
         validateDuplicateMember(member);
         memberRepository.save(member);
         return member.getId();
     }
 
-    private void validateDuplicateMember(@NotNull Member member) {
+    private void validateDuplicateMember(Member member) {
         memberRepository.findByName(member.getName()).ifPresent(member1 -> {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         });

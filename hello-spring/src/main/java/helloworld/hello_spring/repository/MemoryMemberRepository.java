@@ -11,7 +11,7 @@ public class MemoryMemberRepository implements MemberRepository{
     private static long sequece = 0L;
 
     @Override
-    public Member save(@org.jetbrains.annotations.NotNull Member member) {
+    public Member save(Member member) {
         member.setId(++sequece);
         store.put(member.getId(), member);
         return member;
