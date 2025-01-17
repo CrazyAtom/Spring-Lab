@@ -1,23 +1,23 @@
 package helloworld.hello_spring.service;
 
 import helloworld.hello_spring.domain.Member;
+import helloworld.hello_spring.repository.MemberRepository;
 import helloworld.hello_spring.repository.MemoryMemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MemberServiceTest {
+@SpringBootTest
+@Transactional
+class MemberServiceIntergrationTest {
 
-    MemberService memberService;
-    MemoryMemberRepository memberRepository;
-
-    @AfterEach
-    public void afterEach() {
-        memberRepository = new MemoryMemberRepository();
-        memberService = new MemberService(memberRepository);
-    }
+    @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
 
     @Test
     public void 회원가입() {
@@ -48,13 +48,5 @@ class MemberServiceTest {
         Assertions.assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
 
         // then
-    }
-
-    @Test
-    public void findMembers() {
-    }
-
-    @Test
-    public void findOne() {
     }
 }
