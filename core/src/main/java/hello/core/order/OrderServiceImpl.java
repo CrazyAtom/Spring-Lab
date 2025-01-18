@@ -9,9 +9,13 @@ import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-//    private final DiscoutPolicy discoutPolicy = new FixDiscountPolicy();
-    private final DiscoutPolicy discoutPolicy = new RateDiscountPolicy();
+    private final MemberRepository memberRepository;
+    private final DiscoutPolicy discoutPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscoutPolicy discoutPolicy) {
+        this.memberRepository = memberRepository;
+        this.discoutPolicy = discoutPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
