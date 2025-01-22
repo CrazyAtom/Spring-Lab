@@ -3,10 +3,12 @@ package hello.core.order;
 import hello.core.discount.DiscoutPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@Getter
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
