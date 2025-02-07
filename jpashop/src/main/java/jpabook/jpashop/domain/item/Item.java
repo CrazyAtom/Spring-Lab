@@ -1,8 +1,8 @@
 package jpabook.jpashop.domain.item;
-import jpabook.jpashop.exception.NotEnoughStokException;
 
 import jakarta.persistence.*;
 import jpabook.jpashop.domain.Category;
+import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,8 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "DTYPE")
-@Getter @Setter
+@Getter
+@Setter
 public abstract class Item {
 
     @Id
@@ -37,7 +38,7 @@ public abstract class Item {
     public void removeStock(int quantity) {
         int restStock = this.stockQuantity - quantity;
         if (restStock < 0) {
-            throw new NotEnoughStokException("재고 수량이 부족합니다.");
+            throw new NotEnoughStockException("재고 수량이 부족합니다.");
         }
         this.stockQuantity = restStock;
     }
