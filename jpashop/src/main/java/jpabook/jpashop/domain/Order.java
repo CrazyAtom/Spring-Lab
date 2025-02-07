@@ -1,96 +1,109 @@
 package jpabook.jpashop.domain;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.LAZY;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "orders")
 @Getter
 @Setter
+@NoArgsConstructor(access = PROTECTED)
 public class Order {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "order_id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "order_id")
+	private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "member_id")
+	private Member member;
 
-    @OneToMany(mappedBy = "order", cascade = ALL)
-    private List<OrderItem> orderItems = new ArrayList<>();
+	@OneToMany(mappedBy = "order", cascade = ALL)
+	private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "delivery_id")
-    private Delivery delivery;
+	@OneToOne(fetch = LAZY, cascade = ALL)
+	@JoinColumn(name = "delivery_id")
+	private Delivery delivery;
 
-    private LocalDateTime orderDate;    // 주문시간
+	private LocalDateTime orderDate;    // 주문시간
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;    // 주문상태 [ORDER, CANCEL]
+	@Enumerated(EnumType.STRING)
+	private OrderStatus orderStatus;    // 주문상태 [ORDER, CANCEL]
 
-    //==연관관계 메서드==//
-    public void setMember(Member member) {
-        this.member = member;
-        member.getOrders().add(this);
-    }
+	//==연관관계 메서드==//
+	public void setMember(Member member) {
+		this.member = member;
+		member.getOrders().add(this);
+	}
 
-    public void addOrderItems(OrderItem orderItem) {
-        this.orderItems.add(orderItem);
-        orderItem.setOrder(this);
-    }
+	public void addOrderItems(OrderItem orderItem) {
+		this.orderItems.add(orderItem);
+		orderItem.setOrder(this);
+	}
 
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-        delivery.setOrder(this);
-    }
+	public void setDelivery(Delivery delivery) {
+		this.delivery = delivery;
+		delivery.setOrder(this);
+	}
 
-    //==생성 메서드==//
-    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
-        Order order = new Order();
-        order.setMember(member);
-        order.setDelivery(delivery);
-        for (OrderItem orderItem : orderItems) {
-            order.addOrderItems(orderItem);
-        }
-        order.setOrderStatus(OrderStatus.ORDER);
-        order.setOrderDate(LocalDateTime.now());
-        return order;
-    }
+	//==생성 메서드==//
+	public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+		Order order = new Order();
+		order.setMember(member);
+		order.setDelivery(delivery);
+		for (OrderItem orderItem : orderItems) {
+			order.addOrderItems(orderItem);
+		}
+		order.setOrderStatus(OrderStatus.ORDER);
+		order.setOrderDate(LocalDateTime.now());
+		return order;
+	}
 
-    //==비즈니스 로직==//
+	//==비즈니스 로직==//
 
-    /**
-     * 주문 취소
-     */
-    public void cancel() {
-        if (delivery.getStatus() == DeliveryStatus.COMP) {
-            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
-        }
+	/**
+	 * 주문 취소
+	 */
+	public void cancel() {
+		if (delivery.getStatus() == DeliveryStatus.COMP) {
+			throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+		}
 
-        this.setOrderStatus(OrderStatus.CANCEL);
-        for (OrderItem orderItem : orderItems) {
-            orderItem.cancel();
-        }
-    }
+		this.setOrderStatus(OrderStatus.CANCEL);
+		for (OrderItem orderItem : orderItems) {
+			orderItem.cancel();
+		}
+	}
 
-    //==조회 로직==//
+	//==조회 로직==//
 
-    /**
-     * 전체 주문 가격 조회
-     */
-    public int getTotalPrice() {
-        return orderItems.stream()
-                .mapToInt(OrderItem::getTotalPrice)
-                .sum();
-    }
+	/**
+	 * 전체 주문 가격 조회
+	 */
+	public int getTotalPrice() {
+		return orderItems.stream()
+			.mapToInt(OrderItem::getTotalPrice)
+			.sum();
+	}
 }

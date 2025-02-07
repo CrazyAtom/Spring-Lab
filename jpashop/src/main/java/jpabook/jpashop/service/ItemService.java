@@ -14,18 +14,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemService {
 
-  private final ItemRepository itemRepository;
+	private final ItemRepository itemRepository;
 
-  @Transactional
-  public void saveItem(Item item) {
-    itemRepository.save(item);
-  }
+	@Transactional
+	public void saveItem(Item item) {
+		itemRepository.save(item);
+	}
 
-  public List<Item> findItems() {
-    return itemRepository.findAll();
-  }
+	public List<Item> findItems() {
+		return itemRepository.findAll();
+	}
 
-  public Item findOne(Long itemId) {
-    return itemRepository.findOne(itemId);
-  }
+	public Item findOne(Long itemId) {
+		return itemRepository.findOne(itemId);
+	}
 }
+
