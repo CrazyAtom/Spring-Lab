@@ -1,4 +1,8 @@
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
   datasource:
     hikari:
       jdbc-url: jdbc:h2:tcp://localhost/~/_dev/01.Private/04.Spring/Lab/jpashop
