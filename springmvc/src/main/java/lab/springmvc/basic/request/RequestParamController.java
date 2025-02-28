@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lab.springmvc.basic.HelloData;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -84,6 +86,13 @@ public class RequestParamController {
 		@RequestParam MultiValueMap<String, Object> paramMap) {
 		log.info("map={}", paramMap);
 		log.info("username={}, age={}", paramMap.get("username"), paramMap.get("age"));
+		return "ok";
+	}
+
+	@ResponseBody
+	@RequestMapping("/model-attribute-v1")
+	public String requestAttributeV1(@ModelAttribute HelloData helloData) {
+		log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
 		return "ok";
 	}
 }
