@@ -32,7 +32,7 @@ class OrderServiceTest {
 	@Test
 	public void 상품주문() throws Exception {
 		//given
-		Member member = createMember();
+		Member member = createMember("회원1", new Address("서울", "강가", "123-123"));
 		Item item = createBook("JPA", 10000, 10);
 		int orderCount = 2;
 
@@ -51,7 +51,7 @@ class OrderServiceTest {
 	@Test
 	public void 주문취소() throws Exception {
 		//given
-		Member member = createMember();
+		Member member = createMember("회원1", new Address("서울", "강가", "123-123"));
 		Item item = createBook("JPA", 10000, 10);
 		int orderCount = 2;
 
@@ -69,7 +69,7 @@ class OrderServiceTest {
 	@Test
 	public void 상품주문_재고수량초과() throws Exception {
 		//given
-		Member member = createMember();
+		Member member = createMember("회원1", new Address("서울", "강가", "123-123"));
 		Item item = createBook("JPA", 10000, 10);
 
 		//when
@@ -81,8 +81,8 @@ class OrderServiceTest {
 		});
 	}
 
-	private Member createMember() {
-		Member member = Member.createMember("회원1", new Address("서울", "강가", "123-123"));
+	private Member createMember(String name, Address address) {
+		Member member = Member.createMember(name, address);
 		memberService.join(member);
 		return member;
 	}
