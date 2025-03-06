@@ -1,5 +1,7 @@
 package lab.bookshop.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,6 +10,7 @@ import lab.bookshop.domain.Item.Item;
 import lab.bookshop.domain.Member;
 import lab.bookshop.domain.Order;
 import lab.bookshop.domain.OrderItem;
+import lab.bookshop.domain.OrderSearch;
 import lab.bookshop.repository.ItemRepository;
 import lab.bookshop.repository.MemberRepository;
 import lab.bookshop.repository.OrderRepository;
@@ -63,11 +66,10 @@ public class OrderService {
 		return orderRepository.fineOne(orderId);
 	}
 
-	// TODO
 	/**
 	 * 주문 검색
 	 */
-	// public Order findOrders(OrderSearch orderSearch) {
-	// 	return orderRepository.findAll(orderSearch);
-	// }
+	public List<Order> findOrders(OrderSearch orderSearch) {
+		return orderRepository.findAll(orderSearch);
+	}
 }
