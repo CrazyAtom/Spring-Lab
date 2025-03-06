@@ -78,7 +78,7 @@ class OrderServiceTest {
 		//then
 		assertThrows(NotEnoughStockException.class, () -> {
 			orderService.order(member.getId(), item.getId(), orderCount);
-		});
+		}, "재고 수량 부족 예외가 발생해야 합니다.");
 	}
 
 	private Member createMember(String name, Address address) {

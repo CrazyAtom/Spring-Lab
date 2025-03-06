@@ -46,6 +46,6 @@ class MemberServiceTest {
 		//then
 		Assertions.assertThrows(IllegalStateException.class, () -> {
 			memberService.join(member2);
-		});
+		}, "중복 회원 예외가 발생해야 합니다.");
 	}
 }
