@@ -9,7 +9,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import lab.bookshop.domain.Member;
-import lab.bookshop.repository.MemberRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -18,8 +17,6 @@ class MemberServiceTest {
 
 	@Autowired
 	MemberService memberService;
-	@Autowired
-	MemberRepository memberRepository;
 
 	@Test
 	public void 회원가입() throws Exception {
