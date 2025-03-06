@@ -1,5 +1,6 @@
 package lab.bookshop.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -27,5 +28,13 @@ public class Member {
 	private Address address;
 
 	@OneToMany(mappedBy = "member")
-	private List<Order> orders;
+	private List<Order> orders = new ArrayList<>();
+
+	//== 생성 메소드 ==//
+	public static Member createMember(String name, Address address) {
+		Member member = new Member();
+		member.setName(name);
+		member.setAddress(address);
+		return member;
+	}
 }
