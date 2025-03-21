@@ -1,36 +1,41 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
-<body>
+<head th:replace="fragments/header :: header"/>
+<body class="bg-light">
+<div class="container py-5">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-<div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
-    <div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>이름</th>
-                <th>도시</th>
-                <th>주소</th>
-                <th>우편번호</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="member : ${members}">
-                <td th:text="${member.id}"></td>
-                <td th:text="${member.name}"></td>
-                <td th:text="${member.address?.city}"></td>
-                <td th:text="${member.address?.street}"></td>
-                <td th:text="${member.address?.zipcode}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h3 class="card-title mb-0">회원 목록</h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">이름</th>
+                        <th scope="col">도시</th>
+                        <th scope="col">주소</th>
+                        <th scope="col">우편번호</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="member : ${members}">
+                        <td th:text="${member.id}"></td>
+                        <td th:text="${member.name}"></td>
+                        <td th:text="${member.address?.city}"></td>
+                        <td th:text="${member.address?.street}"></td>
+                        <td th:text="${member.address?.zipcode}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div th:replace="fragments/footer :: footer" />
-
-</div> <!-- /container -->
-
+    <div th:replace="fragments/footer :: footer"/>
+</div>
 </body>
 </html>
