@@ -1,0 +1,16 @@
+spring.application.name: springAi
+
+spring:
+  output:
+    ansi:
+    enabled: ALWAYS
+
+  ai:
+    openai:
+      api-key: "API-KEY"
+      chat:
+        base-url: "https://generativelanguage.googleapis.com/v1beta/openai/"
+        options:
+          model: "gemini-2.0-flash"
+          temperature: 0.0
+        completions-path: "/chat/completions"
