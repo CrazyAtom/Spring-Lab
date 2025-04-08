@@ -1,5 +1,65 @@
 # Spring Boot Annotation
 
+### 1. 핵심 구성 Annotations
+
+- 스프링 부트 애플리케이션의 기본 구성을 담당하는 가장 핵심적인 어노테이션들
+
+1. [_@SpringBootApplication_](#springbootapplication)
+2. [_@Component_](#component)
+3. [_@Bean_](#bean)
+4. [_@Configuration_](#configuration)
+
+### 2. 스테레오타입 Annotations
+
+- 각 계층을 구분하는 기본적인 컴포넌트 어노테이션들
+
+1. [_@Controller_](#controller) / [_@RestController_](#restcontroller)
+2. [_@Service_](#service)
+3. [_@Repository_](#repository)
+
+### 3. 의존성 주입 관련
+
+- 스프링의 핵심 기능인 DI를 구현하는 어노테이션들
+
+1. [_@Autowired_](#autowired)
+2. [_@Qualifier_](#qualifier)
+3. [_@Resource_](#resource)
+
+### 4. 웹 요청 처리
+
+- REST API 개발시 가장 빈번하게 사용되는 어노테이션들
+
+1. [_@RequestMapping_](#requestmapping)
+2. [_@GetMapping_](#getmapping)
+3. [_@PostMapping_](#postmapping)
+4. [_@PutMapping_](#putmapping)
+5. [_@DeleteMapping_](#deletemapping)
+6. [_@RequestBody_](#requestbody)
+7. [_@RequestParam_](#requestparam)
+8. [_@PathVariable_](#pathvariable)
+9. [_@ResponseBody_](#responsebody)
+
+### 5. 트랜잭션 관리
+
+- 데이터 무결성을 보장하는 중요한 어노테이션
+
+1. _@Transactional_
+
+### 6. 유효성 검증
+
+- 입력값 검증을 위한 필수적인 어노테이션
+
+1. _@Valid_
+
+### 7. 예외 처리
+
+- 전역적인 예외 처리를 위한 어노테이션들
+
+1. _@ControllerAdvice_ / _@RestControllerAdvice_
+2. _@ExceptionHandler_
+
+---
+
 ### _@SpringBootApplication_
 
 - Spring Boot Application으로 설정
@@ -46,9 +106,16 @@ public class DatabaseConfig {
 ```java
 @Service
 public class PaymentService {
+    // 생성자 주입 방식 (권장)
+    private final PaymentProvider paymentProvider;
+
+    public PaymentService(PaymentProvider paymentProvider) {
+        this.paymentProvider = paymentProvider;
+    }
+
+    // 필드 주입 방식
     @Autowired
-    @Qualifier("kakaoPayment")
-    private PaymentProvider paymentProvider;
+    private PaymentProvider anotherPaymentProvider;
 }
 ```
 
@@ -188,6 +255,38 @@ public List<User> searchUsers(
 }
 ```
 
+### _@PathVariable_
+
+- URL 경로의 일부를 파라미터로 사용할 수 있게 해주는 어노테이션
+- RESTful API에서 리소스를 식별하는데 주로 사용
+- URI 템플릿 변수를 처리하며, 경로의 특정 부분을 메서드 파라미터로 바인딩
+
+```java
+@RestController
+@RequestMapping("/api")
+public class UserController {
+    // 단일 경로 변수 사용
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    // 다중 경로 변수 사용
+    @GetMapping("/users/{userId}/orders/{orderId}")
+    public Order getUserOrder(
+        @PathVariable("userId") Long userId,
+        @PathVariable("orderId") Long orderId) {
+        return orderService.findUserOrder(userId, orderId);
+    }
+
+    // Optional PathVariable
+    @GetMapping({"/users", "/users/{id}"})
+    public User getOptionalUser(@PathVariable(required = false) Long id) {
+        return id == null ? userService.getCurrentUser() : userService.findById(id);
+    }
+}
+```
+
 ### _@RequestBody_
 
 - HTTP 요청 본문을 자바 객체로 변환
@@ -226,6 +325,15 @@ public ResponseEntity<User> createUser(@Valid @RequestBody UserDto userDto) {
 - 빈의 이름을 기준으로 주입할 빈을 선택
 - 동일한 타입의 빈이 여러 개 존재할 때 명확하게 식별하기 위해 사용
 
+```java
+@Service
+public class PaymentService {
+    @Autowired
+    @Qualifier("kakaoPayment")
+    private PaymentProvider paymentProvider;
+}
+```
+
 ### _@Resource_
 
 - Java에서 제공하는 어노테이션으로 *@Autowired*와 유사한 기능
@@ -240,8 +348,22 @@ public ResponseEntity<User> createUser(@Valid @RequestBody UserDto userDto) {
 
   - readOnly: 읽기 전용 트랜잭션 설정
   - isolation: 트랜잭션 격리 수준 설정
+    - DEFAULT
+    - READ_UNCOMMITTED
+    - READ_COMMITTED
+    - REPEATABLE_READ
+    - SERIALIZABLE
   - propagation: 트랜잭션 전파 방식 설정
+    - REQUIRED (기본값)
+    - REQUIRES_NEW
+    - SUPPORTS
+    - NOT_SUPPORTED
+    - MANDATORY
+    - NEVER
+    - NESTED
   - rollbackFor: 특정 예외 발생 시 롤백 설정
+  - noRollbackFor: 특정 예외 발생 시 롤백하지 않음
+  - timeout: 트랜잭션 타임아웃 설정
 
 ```java
 @Service
