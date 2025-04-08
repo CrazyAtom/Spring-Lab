@@ -37,6 +37,21 @@ public class DatabaseConfig {
 }
 ```
 
+### _@Autowired_
+
+- 의존성 자동 주입 (DI)
+- Type을 통해 의존하는 객체를 찾아 자동으로 주입
+- required 속성으로 필수 여부 설정 가능
+
+```java
+@Service
+public class PaymentService {
+    @Autowired
+    @Qualifier("kakaoPayment")
+    private PaymentProvider paymentProvider;
+}
+```
+
 ### _@Component_
 
 - 개발자가 직접 작성한 클래스를 Bean으로 등록
@@ -63,6 +78,24 @@ public class DatabaseConfig {
 - _@ResponseBody_ 역할을 자동적으로 해주는 Annotation
 - _@Controller_, _@ResponseBody_ 를 포함
 
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+    private final UserService userService;
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody @Valid UserDto userDto) {
+        return userService.create(userDto);
+    }
+}
+```
+
 ### _@Controller_
 
 - View를 제공하는 controller로 설정, view(화면) return이 주목적
@@ -85,6 +118,17 @@ public class DatabaseConfig {
 - 모든 Controller에서 발생할 수 있는 예외를 한 곳에서 관리
 - _@ExceptionHandler_, _@InitBinder_, _@ModelAttribute_ 메서드들을 포함할 수 있음
 
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new ErrorResponse(e.getMessage()));
+    }
+}
+```
+
 ### _@ExceptionHandler_(ExceptionClassName.class)
 
 - 특정 예외가 발생했을 때 처리할 메서드를 지정
@@ -102,6 +146,15 @@ public class DatabaseConfig {
 
 - HTTP GET 요청을 특정 핸들러 메서드에 매핑
 - _@RequestMapping(method = RequestMethod.GET)_ 의 축약형
+
+```java
+@GetMapping("/{id}/posts/{postId}")
+public Post getUserPost(
+    @PathVariable Long id,
+    @PathVariable Long postId) {
+    return postService.getUserPost(id, postId);
+}
+```
 
 ### _@PostMapping_
 
@@ -126,6 +179,15 @@ public class DatabaseConfig {
 - URL의 쿼리 파라미터나 폼 데이터를 처리할 때 사용
 - required 속성으로 필수 여부 설정 가능
 
+```java
+@GetMapping("/search")
+public List<User> searchUsers(
+    @RequestParam(required = false) String name,
+    @RequestParam(defaultValue = "0") int page) {
+    return userService.searchUsers(name, page);
+}
+```
+
 ### _@RequestBody_
 
 - HTTP 요청 본문을 자바 객체로 변환
@@ -138,11 +200,25 @@ public class DatabaseConfig {
 - JSR-303 검증 어노테이션으로 설정된 규칙에 따라 검증
 - 주로 _@RequestBody_ 와 함께 사용되어 입력값 검증
 
-### _@Autowired_
+```java
+public class UserDto {
+    @NotNull
+    @Size(min = 2, max = 30)
+    private String username;
 
-- 의존성 자동 주입 (DI)
-- Type을 통해 의존하는 객체를 찾아 자동으로 주입
-- required 속성으로 필수 여부 설정 가능
+    @Email
+    private String email;
+
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
+    private String password;
+}
+
+@PostMapping("/users")
+public ResponseEntity<User> createUser(@Valid @RequestBody UserDto userDto) {
+    // 유효성 검증 통과 후 실행
+    return ResponseEntity.ok(userService.create(userDto));
+}
+```
 
 ### _@Qualifier_
 
@@ -161,7 +237,25 @@ public class DatabaseConfig {
 - 메서드나 클래스에 트랜잭션 기능을 부여
 - 선언적 트랜잭션 관리를 가능하게 함
 - 주요 속성:
+
   - readOnly: 읽기 전용 트랜잭션 설정
   - isolation: 트랜잭션 격리 수준 설정
   - propagation: 트랜잭션 전파 방식 설정
   - rollbackFor: 특정 예외 발생 시 롤백 설정
+
+```java
+@Service
+public class OrderService {
+  @Transactional(rollbackFor = Exception.class)
+  public void createOrder(OrderDto orderDto) {
+      // 주문 생성 로직
+      // 예외 발생시 자동 롤백
+  }
+
+  @Transactional(readOnly = true)
+  public Order getOrder(Long id) {
+      // 조회 전용 트랜잭션
+      return orderRepository.findById(id);
+  }
+}
+```
