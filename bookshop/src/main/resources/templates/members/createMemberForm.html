@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body class="bg-light">
+<div class="container py-5">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">회원 가입</h3>
+
+                    <form role="form" action="/members/new" th:object="${memberForm}" method="post">
+                        <div class="mb-3">
+                            <label th:for="name" class="form-label">이름</label>
+                            <input type="text" th:field="*{name}" class="form-control"
+                                   th:class="${#fields.hasErrors('name')}? 'form-control is-invalid' : 'form-control'"
+                                   placeholder="이름을 입력하세요">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                Incorrect name
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label th:for="city" class="form-label">도시</label>
+                            <input type="text" th:field="*{city}" class="form-control" placeholder="도시를 입력하세요">
+                        </div>
+
+                        <div class="mb-3">
+                            <label th:for="street" class="form-label">거리</label>
+                            <input type="text" th:field="*{street}" class="form-control" placeholder="거리를 입력하세요">
+                        </div>
+
+                        <div class="mb-3">
+                            <label th:for="zipcode" class="form-label">우편번호</label>
+                            <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus-fill me-2"></i>회원 가입
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+</div>
+</body>
+</html>

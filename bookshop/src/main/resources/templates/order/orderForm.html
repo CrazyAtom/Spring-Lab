@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body class="bg-light">
+<div class="container py-5">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">상품 주문</h3>
+
+                    <form role="form" action="/order" method="post">
+                        <div class="mb-3">
+                            <label for="member" class="form-label">주문회원</label>
+                            <select name="memberId" id="member" class="form-select">
+                                <option value="">회원을 선택하세요</option>
+                                <option th:each="member : ${members}"
+                                        th:value="${member.id}"
+                                        th:text="${member.name}"/>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="item" class="form-label">상품</label>
+                            <select name="itemId" id="item" class="form-select">
+                                <option value="">상품을 선택하세요</option>
+                                <option th:each="item : ${items}"
+                                        th:value="${item.id}"
+                                        th:text="${item.name + ' [가격: ' + item.price + '원, 재고: ' + item.stockQuantity + '개]'}"/>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="count" class="form-label">주문수량</label>
+                            <input type="number" name="count" id="count" class="form-control"
+                                   placeholder="주문 수량을 입력하세요" min="1">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-cart-check-fill me-2"></i>주문하기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+</div>
+</body>
+</html>

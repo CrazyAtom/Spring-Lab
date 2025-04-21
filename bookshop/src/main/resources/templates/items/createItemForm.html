@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body class="bg-light">
+<div class="container py-5">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">상품 등록</h3>
+
+                    <form th:action="@{/items/new}" th:object="${form}" method="post">
+                        <div class="mb-3">
+                            <label th:for="name" class="form-label">상품명</label>
+                            <input type="text" th:field="*{name}" class="form-control" placeholder="상품명을 입력하세요">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label th:for="price" class="form-label">가격</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₩</span>
+                                    <input type="number" th:field="*{price}" class="form-control"
+                                           placeholder="가격을 입력하세요">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label th:for="stockQuantity" class="form-label">수량</label>
+                                <input type="number" th:field="*{stockQuantity}" class="form-control"
+                                       placeholder="수량을 입력하세요">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label th:for="author" class="form-label">저자</label>
+                            <input type="text" th:field="*{author}" class="form-control" placeholder="저자를 입력하세요">
+                        </div>
+
+                        <div class="mb-3">
+                            <label th:for="isbn" class="form-label">ISBN</label>
+                            <input type="text" th:field="*{isbn}" class="form-control" placeholder="ISBN을 입력하세요">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle-fill me-2"></i>상품 등록
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+</div>
+</body>
+</html>
