@@ -96,4 +96,16 @@ public class OrderRepository {
 	public List<Order> findAll(OrderSearch orderSearch) {
 		return findAllByCriteria(orderSearch);
 	}
+
+	/**
+	 * 페치 조인으로 성능 최적화
+	 * 회원과 배송 정보를 함께 조회
+	 */
+	public List<Order> findAllWithMemberDelivery() {
+		return em.createQuery(
+			"select o from Order o" +
+				" join fetch o.member m" +
+				" join fetch o.delivery d", Order.class
+		).getResultList();
+	}
 }

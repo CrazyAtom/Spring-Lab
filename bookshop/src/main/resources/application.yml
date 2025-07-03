@@ -5,7 +5,7 @@ spring:
 
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/~/_dev/01.Private/04.Spring/Lab/bookshop/bookshop
+      jdbc-url: jdbc:h2:tcp://localhost/~/bookshop
       driver-class-name: org.h2.Driver
       username: sa
       password:
